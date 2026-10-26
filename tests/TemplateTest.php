@@ -25,14 +25,14 @@ namespace Dwoo\Tests
 
             // set include path as string
             $tpl->setIncludePath(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder' . DIRECTORY_SEPARATOR);
-            $this->assertThat($tpl->getResourceIdentifier(), new DwooConstraintPathEquals(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder' . DIRECTORY_SEPARATOR . 'test.html'));
+            $this->assertConstraint($tpl->getResourceIdentifier(), new DwooConstraintPathEquals(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder' . DIRECTORY_SEPARATOR . 'test.html'));
 
             // set include path as array
             $tpl->setIncludePath(array(
                 __DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder2',
                 __DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder' . DIRECTORY_SEPARATOR
             ));
-            $this->assertThat($tpl->getResourceIdentifier(), new DwooConstraintPathEquals(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder2' . DIRECTORY_SEPARATOR . 'test.html'));
+            $this->assertConstraint($tpl->getResourceIdentifier(), new DwooConstraintPathEquals(__DIR__ . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'subfolder2' . DIRECTORY_SEPARATOR . 'test.html'));
         }
     }
 }

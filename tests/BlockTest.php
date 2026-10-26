@@ -108,10 +108,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testAutoEscapeWrongParam()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{$foo}{auto_escape slkfjsl}{$foo}{/}');
             $tpl->forceCompilation();
 
@@ -178,7 +178,7 @@ BAZZ       {/capture}{$foo}');
             $tpl = new TemplateFile(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'extend1.html');
             $tpl->forceCompilation();
 
-            $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('foo
+            $this->assertConstraint($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('foo
 child1
 toplevelContent1
 bar
@@ -191,7 +191,7 @@ baz'));
             $tpl = new TemplateFile(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resources/extends_huge/home.html');
             $tpl->forceCompilation();
             $this->dwoo->get($tpl, array(), $this->compiler);
-            $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>' . str_repeat('A', 40000) . str_repeat('a', 40000) . '</html>'));
+            $this->assertConstraint($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>' . str_repeat('A', 40000) . str_repeat('a', 40000) . '</html>'));
         }
 
         public function testNonExtendedBlocksFromParent()
@@ -199,7 +199,7 @@ baz'));
             $tpl = new TemplateFile(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'toplevel.html');
             $tpl->forceCompilation();
 
-            $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('foo
+            $this->assertConstraint($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('foo
 
 toplevelContent1
 
@@ -218,7 +218,7 @@ baz'));
             $tpl = new TemplateFile(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'extend2.html');
             $tpl->forceCompilation();
 
-            $this->assertThat($this->dwoo->get($tpl, array('foo' => 'bar'), $this->compiler), new DwooConstraintStringEquals('foo
+            $this->assertConstraint($this->dwoo->get($tpl, array('foo' => 'bar'), $this->compiler), new DwooConstraintStringEquals('foo
 child1
 toplevelContent1child2
 bar
@@ -231,7 +231,7 @@ baz'));
             $tpl = new TemplateFile(dirname(__FILE__) . '/resources/extends_nested/child.html');
             $tpl->forceCompilation();
 
-            $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("<html>
+            $this->assertConstraint($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("<html>
     Root
     Child Header
 
@@ -248,7 +248,7 @@ Parent Footer
             $tpl = new TemplateFile(dirname(__FILE__) . '/resources/extends_nested/child2.html');
             $tpl->forceCompilation();
 
-            $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>
+            $this->assertConstraint($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>
 Parent Content
 lala
 Root Footer

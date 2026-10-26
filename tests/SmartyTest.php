@@ -22,9 +22,9 @@ namespace Dwoo\Tests
          * @param array  $data
          * @param string $dataName
          */
-        public function __construct($name = null, array $data = array(), $dataName = '')
+        protected function setUp(): void
         {
-            // extend this class and override this in your constructor to test a modded compiler
+            // extend this class and override this in your setUp() to test a modded compiler
             $this->dwoo               = new SmartyAdapter();
             $this->dwoo->template_dir = __DIR__ . DIRECTORY_SEPARATOR . 'resources/';
             $this->dwoo->compile_dir  = __DIR__ . DIRECTORY_SEPARATOR . '/temp/compiled/';
@@ -40,7 +40,7 @@ namespace Dwoo\Tests
             $this->assertEquals('{' . Core::VERSION . '} ab cd ef', $this->dwoo->fetch('smartytest.html'));
         }
 
-        public function tearDown()
+        protected function tearDown(): void
         {
         }
     }

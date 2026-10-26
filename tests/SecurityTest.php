@@ -5,7 +5,6 @@ namespace Dwoo\Tests
 
     use Dwoo\Template\Str as TemplateString;
     use Dwoo\Security\Policy as SecurityPolicy;
-    use PHPUnit_Framework_Error;
     use testSecurityClass;
 
     /**
@@ -17,9 +16,9 @@ namespace Dwoo\Tests
     {
         protected $policy;
 
-        public function __construct($name = null, array $data = array(), $dataName = '')
+        protected function setUp(): void
         {
-            parent::__construct($name, $data, $dataName);
+            parent::setUp();
 
             $this->policy = new SecurityPolicy();
             $this->dwoo->setSecurityPolicy($this->policy);
@@ -77,10 +76,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Security\Exception
          */
         public function testNotAllowedPhpFunction()
         {
+            $this->expectException(\Dwoo\Security\Exception::class);
             $tpl = new TemplateString('{testphpfunc("foo")}');
             $tpl->forceCompilation();
 
@@ -100,14 +99,30 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException PHPUnit_Framework_Error
          */
         public function testNotAllowedMethod()
         {
-            $tpl = new TemplateString('{$obj->testOK("foo")}');
-            $tpl->forceCompilation();
+            // PHPUnit 4 turned the E_USER_NOTICE triggered by the security policy into
+            // a PHPUnit_Framework_Error exception; modern PHPUnit only records notices,
+            // so capture it explicitly to keep the intent of this test.
+            $notices = array();
+            set_error_handler(function ($errno, $errstr) use (&$notices) {
+                $notices[] = $errstr;
 
-            $this->dwoo->get($tpl, array('obj' => new testSecurityClass()), $this->compiler);
+                return true;
+            });
+
+            try {
+                $tpl = new TemplateString('{$obj->testOK("foo")}');
+                $tpl->forceCompilation();
+
+                $this->dwoo->get($tpl, array('obj' => new testSecurityClass()), $this->compiler);
+            } finally {
+                restore_error_handler();
+            }
+
+            $this->assertNotEmpty($notices);
+            $this->assertStringContainsString('security policy prevents you from calling', $notices[0]);
         }
 
         public function testAllowStaticMethod()
@@ -123,10 +138,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Security\Exception
          */
         public function testNotAllowedStaticMethod()
         {
+            $this->expectException(\Dwoo\Security\Exception::class);
             $tpl = new TemplateString('{testSecurityClass::testStatic("foo")}');
             $tpl->forceCompilation();
 
@@ -134,10 +149,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Security\Exception
          */
         public function testNotAllowedSubExecution()
         {
+            $this->expectException(\Dwoo\Security\Exception::class);
             $tpl = new TemplateString('{$obj->test(preg_replace_callback("{.}", "mail", "f"))}');
             $tpl->forceCompilation();
 

@@ -15,9 +15,9 @@ namespace Dwoo\Tests
     {
         protected $tpl;
 
-        public function __construct($name = null, array $data = array(), $dataName = '')
+        protected function setUp(): void
         {
-            parent::__construct($name, $data, $dataName);
+            parent::setUp();
 
             $this->tpl = new TemplateString('{$var}{$var2}{$var3}{$var4}');
             $this->tpl->forceCompilation();
@@ -93,10 +93,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testUnset()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $data           = new Data();
             $data->variable = 'val';
             $this->assertEquals(true, isset($data->variable));
@@ -105,10 +105,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testUnassign()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $data           = new Data();
             $data->variable = 'val';
             $this->assertEquals(true, isset($data->variable));

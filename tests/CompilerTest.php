@@ -162,10 +162,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testMixedParametersWrongOrder()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{assign value=5, 3)}');
             $tpl->forceCompilation();
             $this->dwoo->get($tpl, array(), $this->compiler);
@@ -228,10 +228,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testUnclosedLiteral()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{literal}{$foo}{hurray}');
             $tpl->forceCompilation();
             $this->dwoo->get($tpl, array(), $this->compiler);
@@ -501,10 +501,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testAddPreProcessorWithBadName()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $cmp = new Compiler();
             $cmp->addPreProcessor('__BAAAAD__', true);
 
@@ -514,10 +514,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testAddPostProcessorWithBadName()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $cmp = new Compiler();
             $cmp->addPostProcessor('__BAAAAD__', true);
 
@@ -527,10 +527,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testCloseUnopenedBlock()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{/foreach}');
             $tpl->forceCompilation();
 
@@ -538,10 +538,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testParseError()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{++}');
             $tpl->forceCompilation();
 
@@ -549,10 +549,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testUnfinishedStringException()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{"fooo}');
             $tpl->forceCompilation();
 
@@ -560,10 +560,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testMissingArgumentException()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{upper()}');
             $tpl->forceCompilation();
 
@@ -571,10 +571,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testMissingArgumentExceptionVariation2()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{upper foo=bar}');
             $tpl->forceCompilation();
 
@@ -582,10 +582,10 @@ replace="BAR"
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testUnclosedTemplateTag()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('aa{upper foo=bar');
             $tpl->forceCompilation();
 
@@ -814,10 +814,10 @@ fail
         }
 
         /**
-         * @expectedException \Dwoo\Compilation\Exception
          */
         public function testElseWithoutIfIsInvalid()
         {
+            $this->expectException(\Dwoo\Compilation\Exception::class);
             $tpl = new TemplateString('{else}1{/}');
             $tpl->forceCompilation();
             $this->dwoo->get($tpl, array(), $this->compiler);
@@ -841,7 +841,7 @@ namespace
 
     function _underscoreModifierHelper($value)
     {
-        return "_${value}_";
+        return '_' . $value . '_';
     }
 
     class StaticHelper

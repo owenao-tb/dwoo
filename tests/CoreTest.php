@@ -77,18 +77,18 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testDwooGetNonTemplate()
         {
+            $this->expectException(\Dwoo\Exception::class);
             echo $this->dwoo->get(null, array());
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testDwooGetNonData()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $tpl = new TemplateString('a');
             $this->dwoo->get($tpl, null);
         }
@@ -103,10 +103,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testWrongResourceName()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $this->dwoo->templateFactory('sdmlb', 'fookm');
         }
 
@@ -393,7 +393,7 @@ namespace Dwoo\Tests
             $dwoo->setCompileDir($this->compileDir);
             $dwoo->setTemplateDir(__DIR__ . DIRECTORY_SEPARATOR . 'resources');
 
-            $this->assertThat($dwoo->get('extend1.html', array(), $this->compiler), new DwooConstraintStringEquals('foo
+            $this->assertConstraint($dwoo->get('extend1.html', array(), $this->compiler), new DwooConstraintStringEquals('foo
 child1
 toplevelContent1
 bar

@@ -157,7 +157,7 @@ aaa
 
             $tpl->forceCompilation();
 
-            $this->dwoo->get($tpl, array());
+            $this->assertIsString($this->dwoo->get($tpl, array()));
         }
 
         public function testDoubleEscapingOnAssignments()

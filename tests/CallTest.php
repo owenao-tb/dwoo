@@ -99,10 +99,10 @@ namespace Dwoo\Tests
         }
 
         /**
-         * @expectedException \Dwoo\Exception
          */
         public function testCustomInvalidPlugin()
         {
+            $this->expectException(\Dwoo\Exception::class);
             $this->dwoo->addPlugin('test', 'sdfmslkfmsle');
         }
     }

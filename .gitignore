@@ -10,3 +10,4 @@ composer.lock
 ### PHPUnit Tests
 /tests/temp/cache/
 /tests/temp/compiled/
+.phpunit.cache/
