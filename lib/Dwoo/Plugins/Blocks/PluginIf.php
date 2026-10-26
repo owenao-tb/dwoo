@@ -60,7 +60,10 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
     {
         $p = array();
 
-	foreach($params as $k => $v) {
+        $params = array_values($params);
+        for ($k = 0, $numParams = count($params); $k < $numParams; $k++) {
+            $v = $params[$k];
+            $skip = 0;
             $v = (string)$v;
             if (substr($v, 0, 1) === '"' || substr($v, 0, 1) === '\'') {
                 $vmod = strtolower(substr($v, 1, - 1));
@@ -172,7 +175,7 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
                     }
                     if (isset($params[$k + 1]) && strtolower(trim($params[$k + 1], '"\'')) === 'not' && $tokens[$k + 1] === Compiler::T_UNQUOTED_STRING) {
                         $negate = true;
-                        next($params);
+                        $skip++;
                     } else {
                         $negate = false;
                     }
@@ -190,9 +193,9 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
                         case 'div':
                             if (isset($params[$k + $ptr + 1]) && strtolower(trim($params[$k + $ptr + 1], '"\'')) === 'by') {
                                 $p[] = ' % ' . $params[$k + $ptr + 2] . ' ' . ($negate ? '!' : '=') . '== 0';
-                                next($params);
-                                next($params);
-                                next($params);
+                                $skip++;
+                                $skip++;
+                                $skip++;
                             } else {
                                 throw new CompilationException($compiler, 'If : Syntax error : syntax should be "if $a is [not] div by $b", found ' . $params[$k - 1] . ' is ' . ($negate ? 'not ' : '') . 'div ' . $params[$k + $ptr + 1] . ' ' . $params[$k + $ptr + 2]);
                             }
@@ -202,24 +205,24 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
                             if (isset($params[$k + $ptr + 1]) && strtolower(trim($params[$k + $ptr + 1], '"\'')) === 'by') {
                                 $b   = $params[$k + $ptr + 2];
                                 $p[] = '(' . $a . ' / ' . $b . ') % 2 ' . ($negate ? '!' : '=') . '== 0';
-                                next($params);
-                                next($params);
+                                $skip++;
+                                $skip++;
                             } else {
                                 $p[] = $a . ' % 2 ' . ($negate ? '!' : '=') . '== 0';
                             }
-                            next($params);
+                            $skip++;
                             break;
                         case 'odd':
                             $a = array_pop($p);
                             if (isset($params[$k + $ptr + 1]) && strtolower(trim($params[$k + $ptr + 1], '"\'')) === 'by') {
                                 $b   = $params[$k + $ptr + 2];
                                 $p[] = '(' . $a . ' / ' . $b . ') % 2 ' . ($negate ? '=' : '!') . '== 0';
-                                next($params);
-                                next($params);
+                                $skip++;
+                                $skip++;
                             } else {
                                 $p[] = $a . ' % 2 ' . ($negate ? '=' : '!') . '== 0';
                             }
-                            next($params);
+                            $skip++;
                             break;
                         default:
                             throw new CompilationException($compiler, 'If : Syntax error : syntax should be "if $a is [not] (div|even|odd) [by $b]", found ' . $params[$k - 1] . ' is ' . $params[$k + $ptr + 1]);
@@ -228,6 +231,8 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
                 default:
                     $p[] = $v;
             }
+
+            $k += $skip;
         }
 
         return $p;

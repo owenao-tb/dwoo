@@ -80,7 +80,7 @@ interface ITemplate
      *
      * @return string
      */
-    public function getCompiledTemplate(Core $core, ICompiler $compiler = null);
+    public function getCompiledTemplate(Core $core, ?ICompiler $compiler = null);
 
     /**
      * Returns the template name.
@@ -157,5 +157,5 @@ interface ITemplate
      * @return ITemplate|false|null
      */
     public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
-                                           $compileId = null, ITemplate $parentTemplate = null);
+                                           $compileId = null, ?ITemplate $parentTemplate = null);
 }

@@ -942,7 +942,7 @@ class Core
      *
      * @return void
      */
-    public function setSecurityPolicy(SecurityPolicy $policy = null)
+    public function setSecurityPolicy(?SecurityPolicy $policy = null)
     {
         $this->securityPolicy = $policy;
     }
@@ -1044,7 +1044,7 @@ class Core
      * @return ITemplate
      * @throws Exception
      */
-    public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ?ITemplate $parentTemplate = null)
     {
         if (isset($this->resources[$resourceName])) {
             /**

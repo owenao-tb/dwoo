@@ -55,5 +55,5 @@ interface ICompiler
      *
      * @param SecurityPolicy $policy the security policy object
      */
-    public function setSecurityPolicy(SecurityPolicy $policy = null);
+    public function setSecurityPolicy(?SecurityPolicy $policy = null);
 }

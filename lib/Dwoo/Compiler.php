@@ -229,6 +229,14 @@ class Compiler implements ICompiler
     public $core;
 
     /**
+     * Legacy alias of $core, kept for backwards compatibility.
+     *
+     * @deprecated use $core instead
+     * @var Core
+     */
+    public $dwoo;
+
+    /**
      * Holds an instance of this class, used by getInstance when you don't
      * provide a custom compiler in order to save resources.
      *
@@ -579,7 +587,7 @@ class Compiler implements ICompiler
      *
      * @param SecurityPolicy $policy the security policy object
      */
-    public function setSecurityPolicy(SecurityPolicy $policy = null)
+    public function setSecurityPolicy(?SecurityPolicy $policy = null)
     {
         $this->securityPolicy = $policy;
     }
@@ -2064,7 +2072,9 @@ class Compiler implements ICompiler
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
-                $output = call_user_func_array($funcCompiler, $params);
+                // PHP 8: re-index to keep the arguments positional, otherwise string keys
+                // (most notably the "*" rest key) are interpreted as named arguments
+                $output = call_user_func_array($funcCompiler, array_values($params));
             } else {
                 $params = self::implode_r($params);
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
@@ -2126,7 +2136,9 @@ class Compiler implements ICompiler
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
-                $output = call_user_func_array($funcCompiler, $params);
+                // PHP 8: re-index to keep the arguments positional, otherwise string keys
+                // (most notably the "*" rest key) are interpreted as named arguments
+                $output = call_user_func_array($funcCompiler, array_values($params));
             } else {
                 array_unshift($params, '$this');
                 $params = self::implode_r($params);
@@ -3267,7 +3279,9 @@ class Compiler implements ICompiler
                             }
                         }
                         array_unshift($params, $this);
-                        $output = call_user_func_array($funcCompiler, $params);
+                        // PHP 8: re-index to keep the arguments positional, otherwise string keys
+                        // (most notably the "*" rest key) are interpreted as named arguments
+                        $output = call_user_func_array($funcCompiler, array_values($params));
                     } else {
                         array_unshift($params, '$this');
 
@@ -3305,7 +3319,9 @@ class Compiler implements ICompiler
                             }
                             array_unshift($params, $this);
                         }
-                        $output = call_user_func_array($funcCompiler, $params);
+                        // PHP 8: re-index to keep the arguments positional, otherwise string keys
+                        // (most notably the "*" rest key) are interpreted as named arguments
+                        $output = call_user_func_array($funcCompiler, array_values($params));
                     } else {
                         $params = self::implode_r($params);
 
@@ -3643,13 +3659,25 @@ class Compiler implements ICompiler
 
         $out = array();
         foreach ($ref->getParameters() as $param) {
-            if (($class = $param->getClass()) !== null && $class->name === 'Dwoo\Core') {
+            // resolve the parameter type without ReflectionParameter::getClass()/isArray(),
+            // which are deprecated as of PHP 8.0
+            $type = null;
+            if (method_exists($param, 'getType')) {
+                $paramType = $param->getType();
+                if ($paramType instanceof \ReflectionNamedType) {
+                    $type = $paramType->getName();
+                }
+            } elseif ($param->getClass() !== null) {
+                // PHP < 7.1 fallback
+                $type = $param->getClass()->name;
+            } elseif ($param->isArray()) {
+                $type = 'array';
+            }
+
+            if ($type === 'Dwoo\Core' || $type === 'Dwoo\Compiler') {
                 continue;
             }
-            if (($class = $param->getClass()) !== null && $class->name === 'Dwoo\Compiler') {
-                continue;
-            }
-            if ($param->getName() === 'rest' && $param->isArray() === true) {
+            if ($param->getName() === 'rest' && $type === 'array') {
                 $out[] = array('*', $param->isOptional(), null);
                 continue;
             }

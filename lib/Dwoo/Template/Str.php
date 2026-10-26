@@ -354,7 +354,7 @@ class Str implements ITemplate
      *
      * @return string
      */
-    public function getCompiledTemplate(Core $core, ICompiler $compiler = null)
+    public function getCompiledTemplate(Core $core, ?ICompiler $compiler = null)
     {
         $compiledFile = $this->getCompiledFilename($core);
 
@@ -431,7 +431,7 @@ class Str implements ITemplate
      * @return $this
      */
     public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
-                                           $compileId = null, ITemplate $parentTemplate = null)
+                                           $compileId = null, ?ITemplate $parentTemplate = null)
     {
         return new self($resourceId, $cacheTime, $cacheId, $compileId);
     }

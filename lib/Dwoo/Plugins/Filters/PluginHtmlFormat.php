@@ -60,7 +60,7 @@ class PluginHtmlFormat extends Filter
 
         // auto indent all but textareas & pre (or we have weird tabs inside)
         $input = preg_replace_callback("#(<[^>]+>)(\s*)([^<]*)#", array(
-            'self',
+            __CLASS__,
             'tagDispatcher'
         ), $input);
 

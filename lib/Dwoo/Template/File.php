@@ -201,7 +201,7 @@ class File extends Str
      * @throws SecurityException
      */
     public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
-                                           $compileId = null, ITemplate $parentTemplate = null)
+                                           $compileId = null, ?ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array(

@@ -23,6 +23,7 @@ namespace Dwoo;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
+#[\AllowDynamicProperties]
 abstract class Plugin
 {
     /**
@@ -70,7 +71,7 @@ abstract class Plugin
      *
      * @return string
      */
-    public static function paramsToAttributes(array $params, $delim = '\'', Compiler $compiler = null)
+    public static function paramsToAttributes(array $params, $delim = '\'', ?Compiler $compiler = null)
     {
         if (isset($params['*'])) {
             $params = array_merge($params, $params['*']);

@@ -93,7 +93,7 @@ class PluginDynamic extends BlockPlugin implements ICompilableBlock
     public static function unescape($output, $dynamicId, $compiledFile)
     {
         $output = preg_replace_callback('/<dwoo:dynamic_(' . $dynamicId . ')>(.+?)<\/dwoo:dynamic_' . $dynamicId . '>/s', array(
-            'self',
+            __CLASS__,
             'unescapePhp'
         ), $output, - 1, $count);
         // re-add the includes on top of the file
